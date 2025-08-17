@@ -13,6 +13,10 @@ public class Task {
         return this.isDone;
     }
 
+    public void UnmarkDone() {
+        this.isDone = false;
+    }
+
     public String getStatusIcon() {
         return (isDone ? "X" : " "); // mark done task with X
     }
