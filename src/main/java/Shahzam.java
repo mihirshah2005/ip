@@ -30,6 +30,8 @@ public class Shahzam {
                 PrintList(TaskList);
             } else if (input.startsWith("mark ")) {
                 TaskDone(input);
+            } else if (input.startsWith("unmark ")) {
+                TaskUnmark(input);
             } else if (!input.isEmpty()) {
                 AddTask(input);
             }
@@ -50,6 +52,13 @@ public class Shahzam {
         Task t = TaskList.get(idx - 1);
         t.MarkDone();
         System.out.println("Nice! I've marked this task as done:\n  " + t);
+    }
+
+    private void TaskUnmark(String input) {
+        int idx = Integer.parseInt(input.substring(7).trim());
+        Task t = TaskList.get(idx - 1);
+        t.UnmarkDone();
+        System.out.println("OK, I've marked this task as not done yet:\n  " + t);
     }
 
     private void PrintList(ArrayList<Task> tasks) {
