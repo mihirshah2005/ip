@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class Shahzam {
 
@@ -11,6 +12,8 @@ public class Shahzam {
             " |____/|_| |_|\\__,_|_| |_/___\\__,_|_| |_| |_|\n" +
             "                                             ";
 
+    private final ArrayList<String> TaskList = new ArrayList<>();
+
 
     public void run() {
         String input;
@@ -18,7 +21,15 @@ public class Shahzam {
 
         Scanner sc = new Scanner(System.in);
         while (!(input = sc.nextLine()).equals("bye")) {
-            System.out.println(input);
+
+            if (input.equals("list")) {
+                for (int i = 0; i < TaskList.size(); i++) {
+                    System.out.println((i+1) + ". " + TaskList.get(i));
+                }
+            } else {
+                TaskList.add(input);
+                System.out.println("added: " + input);
+            }
         }
         sc.close();
 
