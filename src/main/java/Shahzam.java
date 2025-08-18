@@ -22,78 +22,130 @@ public class Shahzam {
         while (true) {
             String input = sc.nextLine().trim();
 
-            if (input.equals("bye")){
-                break;
+            try {
+                if (input.equals("bye")){
+                    break;
+                }
+
+                if (input.equals("list")) {
+                    PrintList(TaskList);
+                } else if (input.startsWith("mark ")) {
+                    TaskDone(input);
+                } else if (input.startsWith("unmark ")) {
+                    TaskUnmark(input);
+                } else if (input.startsWith("todo ")) {
+                    addToDo(input);
+                } else if (input.startsWith("event ")) {
+                    addEvent(input);
+                } else if (input.startsWith("deadline ")) {
+                    addDeadline(input);
+                } else {
+                    throw new UnknownCommandException();
+                }
+            } catch ( UnknownCommandException | EmptyTaskDescriptionException | InvalidTaskNumberException | InvalidDeadlineFormatException | InvalidEventFormatException e) {
+                System.out.println(" OOPS! " + e.getMessage());
             }
 
-            if (input.equals("list")) {
-                PrintList(TaskList);
-            } else if (input.startsWith("mark ")) {
-                TaskDone(input);
-            } else if (input.startsWith("unmark ")) {
-                TaskUnmark(input);
-            } else if (input.startsWith("todo ")) {
-                addToDo(input);
-            } else if (input.startsWith("event ")) {
-                addEvent(input);
-            } else if (input.startsWith("deadline ")) {
-                addDeadline(input);
-            } else if (!input.isEmpty()) {
-                AddTask(input);
-            }
         }
         sc.close();
 
         System.out.println(EXIT_MSG);
     }
 
-    private void AddTask(String input) {
-        Task t = new Task(input);
-        TaskList.add(t);
-        System.out.println("added: " + input);
+    private void AddTask(String input) throws EmptyTaskDescriptionException {
+        if (input.isEmpty()) {
+            throw new EmptyTaskDescriptionException("The description of a task cannot be empty.");
+        } else {
+            Task t = new Task(input);
+            TaskList.add(t);
+            System.out.println("added: " + input);
+        }
     }
 
-    private void TaskDone(String input) {
-        int idx = Integer.parseInt(input.substring(5).trim()); // 1-based
-        Task t = TaskList.get(idx - 1);
-        t.MarkDone();
-        System.out.println("Nice! I've marked this task as done:\n  " + t);
+    private void TaskDone(String input) throws InvalidTaskNumberException {
+        try {
+            int idx = Integer.parseInt(input.substring(5).trim());
+            if (idx < 1 || idx > TaskList.size()) {
+                throw new InvalidTaskNumberException("There is no task with that number.");
+            }
+
+            Task t = TaskList.get(idx - 1);
+            t.MarkDone();
+            System.out.println("Nice! I've marked this task as done:\n  " + t);
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new InvalidTaskNumberException("Please provide a valid task number.");
+        }
+
     }
 
-    private void TaskUnmark(String input) {
-        int idx = Integer.parseInt(input.substring(7).trim());
-        Task t = TaskList.get(idx - 1);
-        t.UnmarkDone();
-        System.out.println("OK, I've marked this task as not done yet:\n  " + t);
+    private void TaskUnmark(String input) throws InvalidTaskNumberException{
+        try {
+            int idx = Integer.parseInt(input.substring(7).trim());
+            if (idx < 1 || idx > TaskList.size()) {
+                throw new InvalidTaskNumberException("There is no task with that number.");
+            }
+            Task t = TaskList.get(idx - 1);
+            t.UnmarkDone();
+            System.out.println("OK, I've marked this task as not done yet:\n  " + t);
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new InvalidTaskNumberException("Please provide a valid task number.");
+        }
+
     }
 
-    private void addToDo(String input) {
-        Task t = new ToDo(input.substring(5).trim());
-        TaskList.add(t);
-        System.out.println("Got it. I've added this task:\n  " + t);
-        System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list." );
+    private void addToDo(String input) throws EmptyTaskDescriptionException{
+        if (input.length() < 5) {
+            throw new EmptyTaskDescriptionException("The description of a todo cannot be empty.");
+        } else {
+            Task t = new ToDo(input.substring(5).trim());
+            TaskList.add(t);
+            System.out.println("Got it. I've added this task:\n  " + t);
+            System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list.");
+        }
     }
 
-    private void addDeadline(String input) {
-        String[] time_str = input.substring(9).split("/by");
-        Task t = new Deadline(time_str[0].trim(), time_str[1].trim());
-        TaskList.add(t);
-        System.out.println("Got it. I've added this task:\n  " + t);
-        System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list." );
+    private void addDeadline(String input) throws InvalidDeadlineFormatException{
+        try {
+            String[] time_str = input.substring(9).split("/by");
+            if (time_str.length < 2) {
+                throw new InvalidDeadlineFormatException("Please specify a deadline with the /by keyword.");
+            }
+
+            Task t = new Deadline(time_str[0].trim(), time_str[1].trim());
+            TaskList.add(t);
+            System.out.println("Got it. I've added this task:\n  " + t);
+            System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list.");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new InvalidDeadlineFormatException("Deadline format is incorrect. Use '/by' to specify deadline.");
+        }
+
     }
 
-    private void addEvent(String input) {
-        String[] parts = input.substring(6).split("/from");
-        String description = parts[0].trim();
+    private void addEvent(String input) throws InvalidEventFormatException{
+        try {
+            String[] parts = input.substring(6).split("/from");
+            if (parts.length < 2) {
+                throw new InvalidEventFormatException("Please specify an event with '/from' keyword.");
+            }
 
-        String[] timeParts = parts[1].split("/to");
-        String fromTime = timeParts[0].trim();
-        String toTime = timeParts[1].trim();
+            String description = parts[0].trim();
 
-        Task t = new Event(description, fromTime, toTime);
-        TaskList.add(t);
-        System.out.println("Got it. I've added this task:\n  " + t);
-        System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list." );
+            String[] timeParts = parts[1].split("/to");
+            if (timeParts.length < 2) {
+                throw new InvalidEventFormatException("Please specify both /from and /to time for the event.");
+            }
+
+            String fromTime = timeParts[0].trim();
+            String toTime = timeParts[1].trim();
+
+            Task t = new Event(description, fromTime, toTime);
+            TaskList.add(t);
+            System.out.println("Got it. I've added this task:\n  " + t);
+            System.out.println("Now you have " + TaskList.size() + " tasks in your list." );
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to' to specify time.");
+        }
+
     }
     private void PrintList(ArrayList<Task> tasks) {
         System.out.println("Here are the tasks in your list:");
