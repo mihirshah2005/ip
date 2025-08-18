@@ -39,6 +39,8 @@ public class Shahzam {
                     addEvent(input);
                 } else if (input.startsWith("deadline ")) {
                     addDeadline(input);
+                } else if (input.startsWith("delete ")) {
+                    deleteTask(input);
                 } else {
                     throw new UnknownCommandException();
                 }
@@ -146,6 +148,20 @@ public class Shahzam {
             throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to' to specify time.");
         }
 
+    }
+
+    private void deleteTask(String input) throws InvalidTaskNumberException {
+        try {
+            int idx = Integer.parseInt(input.substring(7).trim()); // 1-based index
+            if (idx < 1 || idx > TaskList.size()) {
+                throw new InvalidTaskNumberException("There is no task with that number.");
+            }
+            Task t = TaskList.remove(idx - 1); // Remove task at the index
+            System.out.println("Noted. I've removed this task:\n  " + t);
+            System.out.println("Now you have " + TaskList.size() + " tasks in your list.");
+        } catch (NumberFormatException | IndexOutOfBoundsException e) {
+            throw new InvalidTaskNumberException("Please provide a valid task number.");
+        }
     }
     private void PrintList(ArrayList<Task> tasks) {
         System.out.println("Here are the tasks in your list:");
