@@ -1,8 +1,38 @@
-Hello from
-              ____  _           _
-             / ___|| |__   __ _| |__  ______ _ _ __ ___
-             \___ \| '_ \ / _` | '_ \|_  / _` | '_ ` _  \
-              ___) | | | | (_| | | | |/ / (_| | | | | | |
-             |____/|_| |_|\__,_|_| |_/___\__,_|_| |_| |_|
 
-
+The word was spoken, SHAHZAM awakens.
+What can I do for you today?
+Got it. I've added this task:
+  [T][ ] read book
+Now you have 1 tasks in your list.
+Got it. I've added this task:
+  [D][ ] return book (by: Sunday)
+Now you have 2 tasks in your list.
+Got it. I've added this task:
+  [E][ ] project meeting (from: Mon 2pm to: 4pm)
+Now you have 3 tasks in your list.
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[D][ ] return book (by: Sunday)
+3.[E][ ] project meeting (from: Mon 2pm to: 4pm)
+Nice! I've marked this task as done:
+  [T][X] read book
+Nice! I've marked this task as done:
+  [E][X] project meeting (from: Mon 2pm to: 4pm)
+Got it. I've added this task:
+  [T][ ] borrow book
+Now you have 4 tasks in your list.
+Here are the tasks in your list:
+1.[T][X] read book
+2.[D][ ] return book (by: Sunday)
+3.[E][X] project meeting (from: Mon 2pm to: 4pm)
+4.[T][ ] borrow book
+OK, I've marked this task as not done yet:
+  [T][ ] read book
+Noted. I've removed this task:
+  [D][ ] return book (by: Sunday)
+Now you have 3 tasks in your list.
+Here are the tasks in your list:
+1.[T][ ] read book
+2.[E][X] project meeting (from: Mon 2pm to: 4pm)
+3.[T][ ] borrow book
+Thunder quiets. SHAHZAM signing off, until next time.
