@@ -1,4 +1,0 @@
-[T][X] nothing
-[T][ ] read book
-[D][ ] return book (by: June 6th)
-[T][ ] borrow book
