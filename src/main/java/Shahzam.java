@@ -120,7 +120,7 @@ public class Shahzam {
 
                 LocalDateTime by = parseStoredDateTime(byStr);
                 // If Deadline constructor expects LocalDateTime:
-                newTask = new Deadline(description, byStr);
+                newTask = new Deadline(description, by);
                 // If yours still takes a String that it parses internally, you can instead pass byStr.
                 break;
             }
@@ -228,16 +228,27 @@ public class Shahzam {
 
     private void addDeadline(String input) throws InvalidDeadlineFormatException{
         try {
-            String[] time_str = input.substring(9).split("/by");
-            if (time_str.length < 2) {
+            String[] parts = input.substring(9).split("/by", 2);
+            if (parts.length < 2) {
                 throw new InvalidDeadlineFormatException("Please specify a deadline with the /by keyword.");
             }
 
-            Task t = new Deadline(time_str[0].trim(), time_str[1].trim());
+            String description = parts[0].trim();
+            String byRaw       = parts[1].trim();
+
+            // parse full datetime using your util (Option A)
+            LocalDateTime by = DateTimeFormatUtils.getLocalDateTimeFromString(byRaw);
+
+            Task t = new Deadline(description, by);
             AddTask(t, true);
-        } catch (ArrayIndexOutOfBoundsException e) {
+        } catch (IndexOutOfBoundsException e) {
             throw new InvalidDeadlineFormatException("Deadline format is incorrect. Use '/by' to specify deadline.");
+        } catch (Exception e) { // whatever your util throws (e.g., ButtercupException)
+            throw new InvalidDeadlineFormatException(
+                    "Use '/by yyyy-MM-dd HHmm' or '/by d/M/yyyy HHmm' (e.g., 2019-12-02 1800 or 2/12/2019 1800)."
+            );
         }
+
 
     }
 
