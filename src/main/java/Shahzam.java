@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.io.IOException;
 
 
@@ -109,27 +114,39 @@ public class Shahzam {
             case 'T': // todo
                 newTask = new ToDo(input.substring(7));
                 break;
-            case 'D': // deadline
+            case 'D': { // [D][ ] desc (by: <datetime>)
                 description = input.substring(7, input.indexOf(" ("));
-                time = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
-                newTask = new Deadline(description, time);
+                String byStr = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
+
+                LocalDateTime by = parseStoredDateTime(byStr);
+                // If Deadline constructor expects LocalDateTime:
+                newTask = new Deadline(description, byStr);
+                // If yours still takes a String that it parses internally, you can instead pass byStr.
                 break;
-            case 'E':  // event: [E][ ] desc (from: <from> to: <to>)
+            }
+
+            case 'E': { // [E][ ] desc (from: <datetime> to: <datetime>)
                 description = input.substring(7, input.indexOf(" ("));
 
-                int fromStart = input.indexOf("(from: ") + 7;  // after "(from: "
+                int fromStart = input.indexOf("(from: ") + 7;
                 int toSep     = input.indexOf(" to: ", fromStart);
                 int endParen  = input.lastIndexOf(')');
-
                 if (fromStart < 7 || toSep == -1 || endParen == -1) {
                     throw new DataIntegrityException();
                 }
 
-                String fromTime = input.substring(fromStart, toSep).trim();
-                String toTime   = input.substring(toSep + 5, endParen).trim();
+                String fromStr = input.substring(fromStart, toSep).trim();
+                String toStr   = input.substring(toSep + 5, endParen).trim();
 
-                newTask = new Event(description, fromTime, toTime);
+                LocalDateTime from = parseStoredDateTime(fromStr);
+                LocalDateTime to   = parseStoredDateTime(toStr);
+
+                // If Event constructor expects LocalDateTime:
+                newTask = new Event(description, from.toLocalTime(), to.toLocalTime());
+                // If yours expects LocalDate + LocalTime:
+                // newTask = new Event(description, from.toLocalDate(), from.toLocalTime(), to.toLocalTime());
                 break;
+            }
             default:
                 throw new DataIntegrityException();
             }
@@ -143,6 +160,20 @@ public class Shahzam {
 
         // Close reader
         br.close();
+    }
+
+    private LocalDateTime parseStoredDateTime(String s) throws DataIntegrityException {
+        try {
+            return DateTimeFormatUtils.getLocalDateTimeFromString(s);
+        } catch (ShahzamExceptions ignored) {
+            // If your toString() prints with DateTimeFormatUtils.formatDateTime(...)
+            try {
+                DateTimeFormatter OUT = DateTimeFormatter.ofPattern("MMM dd yyyy HHmm");
+                return LocalDateTime.parse(s, OUT);
+            } catch (Exception e) {
+                throw new DataIntegrityException(); // not a recognized stored datetime
+            }
+        }
     }
 
     private void AddTask(Task newTask, boolean showMsg) {
@@ -212,25 +243,24 @@ public class Shahzam {
 
     private void addEvent(String input) throws InvalidEventFormatException{
         try {
-            String[] parts = input.substring(6).split("/from");
-            if (parts.length < 2) {
-                throw new InvalidEventFormatException("Please specify an event with '/from' keyword.");
-            }
-
+            String[] parts = input.substring(6).split("/from", 2);
+            if (parts.length < 2) throw new InvalidEventFormatException("Please specify '/from'.");
             String description = parts[0].trim();
 
-            String[] timeParts = parts[1].split("/to");
-            if (timeParts.length < 2) {
-                throw new InvalidEventFormatException("Please specify both /from and /to time for the event.");
-            }
+            String[] timeParts = parts[1].split("/to", 2);
+            if (timeParts.length < 2) throw new InvalidEventFormatException("Please specify '/to'.");
 
-            String fromTime = timeParts[0].trim();
-            String toTime = timeParts[1].trim();
+            LocalDateTime from = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[0].trim());
+            LocalDateTime to   = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[1].trim());
 
-            Task t = new Event(description, fromTime, toTime);
+            Task t = new Event(description, from.toLocalTime(), to.toLocalTime()); // Event(LocalDateTime, LocalDateTime)
             AddTask(t, true);
-        } catch (ArrayIndexOutOfBoundsException e) {
-            throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to' to specify time.");
+        } catch (ShahzamExceptions e) {
+            throw new InvalidEventFormatException(
+                    "Use '/from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm' or '/from d/M/yyyy HHmm /to d/M/yyyy HHmm'."
+            );
+        } catch (IndexOutOfBoundsException e) {
+            throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to'.");
         }
 
     }
