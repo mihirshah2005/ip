@@ -1,5 +1,11 @@
 import java.util.Scanner;
 import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Shahzam {
 
@@ -15,11 +21,18 @@ public class Shahzam {
      */
 
     private final ArrayList<Task> TaskList = new ArrayList<>();
+    private final String fileName = "data.txt";
 
 
     public void run() {
         //System.out.println(logo + WELCOME_MSG);
         System.out.println(WELCOME_MSG);
+
+        try {
+            loadData();
+        } catch (ShahzamExceptions | IOException e) {
+            System.out.println(e.getMessage());
+        }
 
         Scanner sc = new Scanner(System.in);
         while (true) {
@@ -30,24 +43,12 @@ public class Shahzam {
                     break;
                 }
 
-                if (input.equals("list")) {
-                    PrintList(TaskList);
-                } else if (input.startsWith("mark ")) {
-                    TaskDone(input);
-                } else if (input.startsWith("unmark ")) {
-                    TaskUnmark(input);
-                } else if (input.startsWith("todo ")) {
-                    addToDo(input);
-                } else if (input.startsWith("event ")) {
-                    addEvent(input);
-                } else if (input.startsWith("deadline ")) {
-                    addDeadline(input);
-                } else if (input.startsWith("delete ")) {
-                    deleteTask(input);
-                } else {
-                    throw new UnknownCommandException();
-                }
-            } catch ( UnknownCommandException | EmptyTaskDescriptionException | InvalidTaskNumberException | InvalidDeadlineFormatException | InvalidEventFormatException e) {
+                interpretCommand(input);
+
+                // Update storage file
+                saveData();
+
+            } catch ( ShahzamExceptions | IOException e) {
                 System.out.println(" OOPS! " + e.getMessage());
             }
 
@@ -57,14 +58,101 @@ public class Shahzam {
         System.out.println(EXIT_MSG);
     }
 
-    private void AddTask(String input) throws EmptyTaskDescriptionException {
-        if (input.isEmpty()) {
-            throw new EmptyTaskDescriptionException("The description of a task cannot be empty.");
-        } else {
-            Task t = new Task(input);
-            TaskList.add(t);
-            System.out.println("added: " + input);
+    private void interpretCommand(String input) throws ShahzamExceptions {
+        // Each if else handles one type of command
+            if (input.equals("list")) {
+                PrintList(TaskList);
+            } else if (input.startsWith("mark ")) {
+                TaskDone(input);
+            } else if (input.startsWith("unmark ")) {
+                TaskUnmark(input);
+            } else if (input.startsWith("todo ")) {
+                addToDo(input);
+            } else if (input.startsWith("event ")) {
+                addEvent(input);
+            } else if (input.startsWith("deadline ")) {
+                addDeadline(input);
+            } else if (input.startsWith("delete ")) {
+                deleteTask(input);
+            } else {
+                throw new UnknownCommandException();
+            }
         }
+
+    private void saveData() throws IOException {
+        // Reformat the list of tasks for storage
+        StringBuilder output = new StringBuilder();
+        TaskList.forEach(task -> output.append(task.toString()).append("\n"));
+
+        FileWriter fw = new FileWriter(fileName, false);
+        fw.write(output.toString());
+        fw.close();
+    }
+
+    private void loadData() throws DataIntegrityException, IOException {
+        // Initialize save file and create parent directory
+        File file = new File(fileName);
+        if (file.createNewFile()) {
+            return;
+        }
+        String input;
+        BufferedReader br = new BufferedReader(new FileReader(fileName));
+
+        // Read the rest of data and add to list of tasks
+        while ((input = br.readLine()) != null) {
+            Task newTask;
+            String description;
+            String time;
+
+            // Obtain relevant info based on type of task
+            switch (input.charAt(1)) {
+            case 'T': // todo
+                newTask = new ToDo(input.substring(7));
+                break;
+            case 'D': // deadline
+                description = input.substring(7, input.indexOf(" ("));
+                time = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
+                newTask = new Deadline(description, time);
+                break;
+            case 'E':  // event: [E][ ] desc (from: <from> to: <to>)
+                description = input.substring(7, input.indexOf(" ("));
+
+                int fromStart = input.indexOf("(from: ") + 7;  // after "(from: "
+                int toSep     = input.indexOf(" to: ", fromStart);
+                int endParen  = input.lastIndexOf(')');
+
+                if (fromStart < 7 || toSep == -1 || endParen == -1) {
+                    throw new DataIntegrityException();
+                }
+
+                String fromTime = input.substring(fromStart, toSep).trim();
+                String toTime   = input.substring(toSep + 5, endParen).trim();
+
+                newTask = new Event(description, fromTime, toTime);
+                break;
+            default:
+                throw new DataIntegrityException();
+            }
+            if (input.charAt(4) == 'X') {
+                newTask.MarkDone();
+            }
+
+            // Add task to list but do not show a confirmation msg
+            AddTask(newTask, false);
+        }
+
+        // Close reader
+        br.close();
+    }
+
+    private void AddTask(Task newTask, boolean showMsg) {
+        TaskList.add(newTask);
+        if (showMsg) {
+            System.out.println("Alright, new task added to the list:" + "\n  " +
+                    newTask + "\n" +
+                    "Now you have " + TaskList.size() + " task(s) in the list.");
+        }
+
     }
 
     private void TaskDone(String input) throws InvalidTaskNumberException {
@@ -103,9 +191,7 @@ public class Shahzam {
             throw new EmptyTaskDescriptionException("The description of a todo cannot be empty.");
         } else {
             Task t = new ToDo(input.substring(5).trim());
-            TaskList.add(t);
-            System.out.println("Got it. I've added this task:\n  " + t);
-            System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list.");
+            AddTask(t, true);
         }
     }
 
@@ -117,9 +203,7 @@ public class Shahzam {
             }
 
             Task t = new Deadline(time_str[0].trim(), time_str[1].trim());
-            TaskList.add(t);
-            System.out.println("Got it. I've added this task:\n  " + t);
-            System.out.println("Now you have " + TaskList.toArray().length + " tasks in your list.");
+            AddTask(t, true);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidDeadlineFormatException("Deadline format is incorrect. Use '/by' to specify deadline.");
         }
@@ -144,9 +228,7 @@ public class Shahzam {
             String toTime = timeParts[1].trim();
 
             Task t = new Event(description, fromTime, toTime);
-            TaskList.add(t);
-            System.out.println("Got it. I've added this task:\n  " + t);
-            System.out.println("Now you have " + TaskList.size() + " tasks in your list." );
+            AddTask(t, true);
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to' to specify time.");
         }
