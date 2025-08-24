@@ -142,7 +142,7 @@ public class Shahzam {
                 LocalDateTime to   = parseStoredDateTime(toStr);
 
                 // If Event constructor expects LocalDateTime:
-                newTask = new Event(description, from.toLocalTime(), to.toLocalTime());
+                newTask = new Event(description, from, to);
                 // If yours expects LocalDate + LocalTime:
                 // newTask = new Event(description, from.toLocalDate(), from.toLocalTime(), to.toLocalTime());
                 break;
@@ -264,7 +264,7 @@ public class Shahzam {
             LocalDateTime from = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[0].trim());
             LocalDateTime to   = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[1].trim());
 
-            Task t = new Event(description, from.toLocalTime(), to.toLocalTime()); // Event(LocalDateTime, LocalDateTime)
+            Task t = new Event(description, from, to); // Event(LocalDateTime, LocalDateTime)
             AddTask(t, true);
         } catch (ShahzamExceptions e) {
             throw new InvalidEventFormatException(
