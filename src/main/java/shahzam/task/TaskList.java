@@ -9,6 +9,8 @@ import shahzam.utils.DateTimeFormatUtils;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class TaskList {
 
@@ -156,6 +158,38 @@ public class TaskList {
                 .append(TaskList.get(size - 1));
 
         return "Here are the tasks in your list: \n" + sb;
+    }
+
+    public String findInList(String command) throws IllegalFormatException {
+        validateCommand(command, "^find .*", "find [keyword]");
+
+        String keyword = command.substring(5).trim();
+
+        // Filter tasks that match the description keyword (case-insensitive)
+        List<Task> filteredTasks = TaskList.stream()
+                .filter(task -> task.matchDescription(keyword))  // Make sure matchDescription exists
+                .collect(Collectors.toList());
+
+        // Return formatted list
+        return formatPrintList(filteredTasks);
+    }
+
+    private String formatPrintList(List<Task> tasks) {
+        StringBuilder sb = new StringBuilder();
+        int size = tasks.size();
+
+        if (size == 0) {
+            return "No tasks matching your search.";
+        }
+
+        for (int i = 0; i < size; i++) {
+            sb.append(i + 1)
+                    .append(". ")
+                    .append(tasks.get(i))
+                    .append("\n");
+        }
+
+        return "Here are the tasks matching your search:\n" + sb.toString();
     }
 
     private void validateCommand(String command, String regex, String format) throws IllegalFormatException {

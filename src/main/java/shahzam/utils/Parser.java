@@ -16,6 +16,8 @@ public class Parser {
             return (TaskList) -> TaskList.addToDo(input);
         } else if (input.startsWith("event ")) {
             return (TaskList) -> TaskList.addEvent(input);
+        } else if (input.startsWith("find ")) {
+            return (TaskList) -> TaskList.findInList(input);
         } else if (input.startsWith("deadline ")) {
             return (TaskList) -> TaskList.addDeadline(input);
         } else if (input.startsWith("delete ")) {

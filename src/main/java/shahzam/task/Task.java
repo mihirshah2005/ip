@@ -15,6 +15,10 @@ public class Task {
         return this.isDone;
     }
 
+    public boolean matchDescription(String keyword) {
+        return description.contains(keyword);
+    }
+
     public void UnmarkDone() {
         this.isDone = false;
     }
