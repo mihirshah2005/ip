@@ -10,9 +10,11 @@ import shahzam.utils.DateTimeFormatUtils;
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
+/**
+ * Represents a list of tasks.
+ * Provides methods to add, mark, unmark, delete, and display tasks.
+ */
 public class TaskList {
-
-
 
     private ArrayList<Task> TaskList = new ArrayList<>();
 
@@ -20,14 +22,31 @@ public class TaskList {
         this(new ArrayList<>());
     }
 
+    /**
+     * Constructs a TaskList with a specified list of tasks.
+     *
+     * @param TaskList The list of tasks to initialize the TaskList with.
+     */
     public TaskList(ArrayList<Task> TaskList) {
         this.TaskList = TaskList;
     }
 
+    /**
+     * Returns the list of tasks in the TaskList.
+     *
+     * @return The list of tasks.
+     */
     public ArrayList<Task> getTasks() {
         return TaskList;
     }
 
+    /**
+     * Adds a new task to the TaskList.
+     *
+     * @param newTask The task to be added.
+     * @param showMsg Whether to show a message after adding the task.
+     * @return A message indicating the task has been added.
+     */
     public String AddTask(Task newTask, boolean showMsg) {
         TaskList.add(newTask);
         if (showMsg) {
@@ -39,6 +58,13 @@ public class TaskList {
 
     }
 
+    /**
+     * Marks a task as done based on its index.
+     *
+     * @param input The input string containing the task index to mark as done.
+     * @return A message indicating the task has been marked as done.
+     * @throws InvalidTaskNumberException If the task number is invalid.
+     */
     public String TaskDone(String input) throws InvalidTaskNumberException {
         try {
             int idx = Integer.parseInt(input.substring(5).trim());
@@ -55,6 +81,14 @@ public class TaskList {
 
     }
 
+
+    /**
+     * Unmarks a task as done based on its index.
+     *
+     * @param input The input string containing the task index to unmark.
+     * @return A message indicating the task has been marked as not done.
+     * @throws InvalidTaskNumberException If the task number is invalid.
+     */
     public String TaskUnmark(String input) throws InvalidTaskNumberException{
         try {
             int idx = Integer.parseInt(input.substring(7).trim());
@@ -70,6 +104,13 @@ public class TaskList {
 
     }
 
+    /**
+     * Adds a ToDo task to the TaskList.
+     *
+     * @param input The input string containing the description of the task.
+     * @return A message indicating the task has been added.
+     * @throws IllegalFormatException If the input format is invalid.
+     */
     public String addToDo(String input) throws IllegalFormatException{
         validateCommand(input, "^todo .*", "todo [description]");
         Task newTask = new ToDo(input.substring(5).trim());
@@ -77,6 +118,14 @@ public class TaskList {
         TaskList.add(newTask);
         return formatAddMessage(newTask, TaskList.size());
     }
+
+    /**
+     * Adds a Deadline task to the TaskList.
+     *
+     * @param input The input string containing the description and deadline.
+     * @return A message indicating the task has been added.
+     * @throws InvalidDeadlineFormatException If the deadline format is invalid.
+     */
 
     public String addDeadline(String input) throws InvalidDeadlineFormatException{
         try {
@@ -103,6 +152,13 @@ public class TaskList {
 
     }
 
+    /**
+     * Adds an Event task to the TaskList.
+     *
+     * @param input The input string containing the description, start time, and end time.
+     * @return A message indicating the task has been added.
+     * @throws InvalidEventFormatException If the event format is invalid.
+     */
     public String addEvent(String input) throws InvalidEventFormatException {
         try {
             String[] parts = input.substring(6).split("/from", 2);
@@ -127,6 +183,13 @@ public class TaskList {
 
     }
 
+    /**
+     * Deletes a task from the TaskList based on its index.
+     *
+     * @param input The input string containing the task index to delete.
+     * @return A message indicating the task has been removed.
+     * @throws InvalidTaskNumberException If the task number is invalid.
+     */
     public String deleteTask(String input) throws InvalidTaskNumberException {
         try {
             int idx = Integer.parseInt(input.substring(7).trim()); // 1-based index
@@ -158,6 +221,14 @@ public class TaskList {
         return "Here are the tasks in your list: \n" + sb;
     }
 
+    /**
+     * Validates the format of a command using regular expressions.
+     *
+     * @param command The command string to validate.
+     * @param regex   The regular expression to check against.
+     * @param format  The expected format description.
+     * @throws IllegalFormatException If the command doesn't match the format.
+     */
     private void validateCommand(String command, String regex, String format) throws IllegalFormatException {
         if (!command.matches(regex)) {
             throw new IllegalFormatException(format);
