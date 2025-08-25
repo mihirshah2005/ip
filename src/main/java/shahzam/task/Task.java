@@ -35,9 +35,10 @@ public class Task {
         return this.isDone;
     }
 
-    /**
-     * Unmarks the task as done.
-     */
+    public boolean matchDescription(String keyword) {
+        return description.contains(keyword);
+    }
+
     public void UnmarkDone() {
         this.isDone = false;
     }

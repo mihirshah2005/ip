@@ -9,6 +9,8 @@ import shahzam.utils.DateTimeFormatUtils;
 
 import java.util.ArrayList;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents a list of tasks.
@@ -222,14 +224,38 @@ public class TaskList {
         return "Here are the tasks in your list: \n" + sb;
     }
 
-    /**
-     * Validates the format of a command using regular expressions.
-     *
-     * @param command The command string to validate.
-     * @param regex   The regular expression to check against.
-     * @param format  The expected format description.
-     * @throws IllegalFormatException If the command doesn't match the format.
-     */
+    public String findInList(String command) throws IllegalFormatException {
+        validateCommand(command, "^find .*", "find [keyword]");
+
+        String keyword = command.substring(5).trim();
+
+        // Filter tasks that match the description keyword (case-insensitive)
+        List<Task> filteredTasks = TaskList.stream()
+                .filter(task -> task.matchDescription(keyword))  // Make sure matchDescription exists
+                .collect(Collectors.toList());
+
+        // Return formatted list
+        return formatPrintList(filteredTasks);
+    }
+
+    private String formatPrintList(List<Task> tasks) {
+        StringBuilder sb = new StringBuilder();
+        int size = tasks.size();
+
+        if (size == 0) {
+            return "No tasks matching your search.";
+        }
+
+        for (int i = 0; i < size; i++) {
+            sb.append(i + 1)
+                    .append(". ")
+                    .append(tasks.get(i))
+                    .append("\n");
+        }
+
+        return "Here are the tasks matching your search:\n" + sb.toString();
+    }
+
     private void validateCommand(String command, String regex, String format) throws IllegalFormatException {
         if (!command.matches(regex)) {
             throw new IllegalFormatException(format);
