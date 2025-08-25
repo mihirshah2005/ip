@@ -16,7 +16,7 @@ import java.time.format.DateTimeParseException;
 public class DateTimeFormatUtils {
     private static final DateTimeFormatter FORMATTER_1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter FORMATTER_2 = DateTimeFormatter.ofPattern("d/M/yyyy HHmm");
-    private static final String OUTPUT_FORMAT = "MMM dd yyyy HHmm";
+    private static final String OUTPUT_FORMAT = "MMM dd yyyy, h:mm a";
 
     /**
      * Returns a <code>LocalDateTime</code> object if the <code>dateTimeString</code>
@@ -35,7 +35,6 @@ public class DateTimeFormatUtils {
         try {
             return LocalDateTime.parse(dateTimeString, FORMATTER_2);
         } catch (DateTimeParseException e) {
-            // ignore
             throw new ShahzamExceptions("Invalid date time format. Please use date formats like 'yyyy-MM-dd HHmm' " +
                     "(e.g. 2019-09-15 1800) or 'd/M/yyyy HHmm' (e.g. 13/9/2015 1800)");
         }
