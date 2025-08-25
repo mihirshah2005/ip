@@ -1,7 +1,6 @@
 public class Parser {
 
     public static CheckedFunction interpretCommand(String input) throws ShahzamExceptions {
-        // Each if else handles one type of command
         if (input.equals("list")) {
             return TaskList::PrintList;
         } else if (input.startsWith("mark ")) {

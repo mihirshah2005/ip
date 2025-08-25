@@ -28,7 +28,6 @@ public class Shahzam {
 
         while (!(input = ui.readCommand()).equals("bye")) {
             try {
-                // Interpret and execute the command input by user
                 String message = Parser.interpretCommand(input).execute(taskList);
                 System.out.println(message);
                 storage.save(taskList.getTasks());

@@ -15,7 +15,7 @@ public class Storage {
     /**
      * Constructor for Storage.
      *
-     * @param filePath file path to local storage
+     * @param fileName file path to local storage
      */
     public Storage(String fileName) {
         this.fileName = fileName;
@@ -29,11 +29,9 @@ public class Storage {
      * does not exist but cannot be created, or cannot be opened for any other reason
      */
     public void save(List<Task> tasks) throws IOException {
-        // Reformat the list of tasks for storage
         StringBuilder output = new StringBuilder();
         tasks.forEach(task -> output.append(task.toString()).append("\n"));
 
-        // Overwrite the current save file
         FileWriter fw = new FileWriter(fileName, false);
         fw.write(output.toString());
         fw.flush();
@@ -58,29 +56,22 @@ public class Storage {
         String input;
         BufferedReader br = new BufferedReader(new FileReader(fileName));
 
-        // Read the rest of data and add to list of tasks
         while ((input = br.readLine()) != null) {
             Task newTask;
             String description;
             String time;
 
-            // Obtain relevant info based on type of task
             switch (input.charAt(1)) {
                 case 'T': // todo
                     newTask = new ToDo(input.substring(7));
                     break;
-                case 'D': { // [D][ ] desc (by: <datetime>)
+                case 'D':
                     description = input.substring(7, input.indexOf(" ("));
                     String byStr = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
-
                     LocalDateTime by = parseStoredDateTime(byStr);
-                    // If Deadline constructor expects LocalDateTime:
                     newTask = new Deadline(description, by);
-                    // If yours still takes a String that it parses internally, you can instead pass byStr.
                     break;
-                }
-
-                case 'E': { // [E][ ] desc (from: <datetime> to: <datetime>)
+                case 'E':
                     description = input.substring(7, input.indexOf(" ("));
 
                     int fromStart = input.indexOf("(from: ") + 7;
@@ -96,12 +87,8 @@ public class Storage {
                     LocalDateTime from = parseStoredDateTime(fromStr);
                     LocalDateTime to   = parseStoredDateTime(toStr);
 
-                    // If Event constructor expects LocalDateTime:
                     newTask = new Event(description, from, to);
-                    // If yours expects LocalDate + LocalTime:
-                    // newTask = new Event(description, from.toLocalDate(), from.toLocalTime(), to.toLocalTime());
                     break;
-                }
                 default:
                     throw new DataIntegrityException();
             }
@@ -109,11 +96,9 @@ public class Storage {
                 newTask.MarkDone();
             }
 
-            // Add task to list but do not show a confirmation msg
             TaskList.add(newTask);
         }
 
-        // Close reader
         br.close();
         return TaskList;
     }
@@ -122,12 +107,11 @@ public class Storage {
         try {
             return DateTimeFormatUtils.getLocalDateTimeFromString(s);
         } catch (ShahzamExceptions ignored) {
-            // If your toString() prints with DateTimeFormatUtils.formatDateTime(...)
             try {
                 DateTimeFormatter OUT = DateTimeFormatter.ofPattern("MMM dd yyyy HHmm");
                 return LocalDateTime.parse(s, OUT);
             } catch (Exception e) {
-                throw new DataIntegrityException(); // not a recognized stored datetime
+                throw new DataIntegrityException();
             }
         }
     }

@@ -1,11 +1,5 @@
 import java.util.ArrayList;
-import java.util.Arrays;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class TaskList {
 
@@ -17,11 +11,6 @@ public class TaskList {
         this(new ArrayList<>());
     }
 
-    /**
-     * Overloading constructor for TaskList. Allows user to input a list of tasks.
-     *
-     * @param tasks an existing list of tasks
-     */
     public TaskList(ArrayList<Task> TaskList) {
         this.TaskList = TaskList;
     }
@@ -74,14 +63,9 @@ public class TaskList {
 
     public String addToDo(String input) throws IllegalFormatException{
         validateCommand(input, "^todo .*", "todo [description]");
-
-        // Add new todo
         Task newTask = new ToDo(input.substring(5).trim());
 
-        // Add the newly created task into list of tasks
         TaskList.add(newTask);
-
-        // Return confirmation message
         return formatAddMessage(newTask, TaskList.size());
     }
 
@@ -95,14 +79,13 @@ public class TaskList {
             String description = parts[0].trim();
             String byRaw       = parts[1].trim();
 
-            // parse full datetime using your util (Option A)
             LocalDateTime by = DateTimeFormatUtils.getLocalDateTimeFromString(byRaw);
 
             Task t = new Deadline(description, by);
             return AddTask(t, true);
         } catch (IndexOutOfBoundsException e) {
             throw new InvalidDeadlineFormatException("Deadline format is incorrect. Use '/by' to specify deadline.");
-        } catch (Exception e) { // whatever your util throws (e.g., ButtercupException)
+        } catch (Exception e) {
             throw new InvalidDeadlineFormatException(
                     "Use '/by yyyy-MM-dd HHmm' or '/by d/M/yyyy HHmm' (e.g., 2019-12-02 1800 or 2/12/2019 1800)."
             );
@@ -123,7 +106,7 @@ public class TaskList {
             LocalDateTime from = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[0].trim());
             LocalDateTime to   = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[1].trim());
 
-            Task t = new Event(description, from, to); // Event(LocalDateTime, LocalDateTime)
+            Task t = new Event(description, from, to);
             return AddTask(t, true);
         } catch (ShahzamExceptions e) {
             throw new InvalidEventFormatException(
@@ -159,12 +142,11 @@ public class TaskList {
                     .append("\n");
         }
 
-        // Last task is special as it does not need the '\n'
         sb.append(size)
                 .append(". ")
                 .append(TaskList.get(size - 1));
 
-        return "Here are the tasks in your list:" + sb.toString();
+        return "Here are the tasks in your list: \n" + sb;
     }
 
     private void validateCommand(String command, String regex, String format) throws IllegalFormatException {

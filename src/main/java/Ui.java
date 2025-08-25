@@ -16,7 +16,6 @@ public class Ui {
     private final Scanner sc;
 
     public Ui() {
-        // Initialize scanner and print welcome message
         sc = new Scanner(System.in);
         System.out.println(WELCOME_MSG);
     }
