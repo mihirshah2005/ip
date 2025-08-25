@@ -39,3 +39,9 @@ class DataIntegrityException extends ShahzamExceptions {
         super("Storage file integrity compromised :(");
     }
 }
+
+class IllegalFormatException extends ShahzamExceptions {
+    public IllegalFormatException(String message) {
+        super(message);
+    }
+}
