@@ -4,7 +4,8 @@ import java.util.Scanner;
 
 public class Ui {
 
-    private final String WELCOME_MSG = "\nThe word was spoken, SHAHZAM awakens.\n" + "What can I do for you today?";
+    private final String WELCOME_MSG = "\nThe word was spoken, SHAHZAM awakens.\n"
+            + "What can I do for you today?";
     private final String EXIT_MSG = "Thunder quiets. SHAHZAM signing off, until next time.";
     /*private final String logo =  "  ____  _           _                        \n" +
             " / ___|| |__   __ _| |__  ______ _ _ __ ___  \n" +

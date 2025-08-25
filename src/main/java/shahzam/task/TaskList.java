@@ -142,7 +142,8 @@ public class TaskList {
             Task t = new Deadline(description, by);
             return AddTask(t, true);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidDeadlineFormatException("shahzam.task.Deadline format is incorrect. Use '/by' to specify deadline.");
+            throw new InvalidDeadlineFormatException(
+                    "shahzam.task.Deadline format is incorrect. Use '/by' to specify deadline.");
         } catch (Exception e) {
             throw new InvalidDeadlineFormatException(
                     "Use '/by yyyy-MM-dd HHmm' or '/by d/M/yyyy HHmm' (e.g., 2019-12-02 1800 or 2/12/2019 1800)."

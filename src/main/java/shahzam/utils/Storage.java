@@ -71,35 +71,35 @@ public class Storage {
             String time;
 
             switch (input.charAt(1)) {
-                case 'T': // todo
-                    newTask = new ToDo(input.substring(7));
-                    break;
-                case 'D':
-                    description = input.substring(7, input.indexOf(" ("));
-                    String byStr = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
-                    LocalDateTime by = parseStoredDateTime(byStr);
-                    newTask = new Deadline(description, by);
-                    break;
-                case 'E':
-                    description = input.substring(7, input.indexOf(" ("));
+            case 'T': // todo
+                newTask = new ToDo(input.substring(7));
+                break;
+            case 'D':
+                description = input.substring(7, input.indexOf(" ("));
+                String byStr = input.substring(input.indexOf("(by: ") + 5, input.length() - 1);
+                LocalDateTime by = parseStoredDateTime(byStr);
+                newTask = new Deadline(description, by);
+                break;
+            case 'E':
+                description = input.substring(7, input.indexOf(" ("));
 
-                    int fromStart = input.indexOf("(from: ") + 7;
-                    int toSep     = input.indexOf(" to: ", fromStart);
-                    int endParen  = input.lastIndexOf(')');
-                    if (fromStart < 7 || toSep == -1 || endParen == -1) {
-                        throw new DataIntegrityException();
-                    }
-
-                    String fromStr = input.substring(fromStart, toSep).trim();
-                    String toStr   = input.substring(toSep + 5, endParen).trim();
-
-                    LocalDateTime from = parseStoredDateTime(fromStr);
-                    LocalDateTime to   = parseStoredDateTime(toStr);
-
-                    newTask = new Event(description, from, to);
-                    break;
-                default:
+                int fromStart = input.indexOf("(from: ") + 7;
+                int toSep     = input.indexOf(" to: ", fromStart);
+                int endParen  = input.lastIndexOf(')');
+                if (fromStart < 7 || toSep == -1 || endParen == -1) {
                     throw new DataIntegrityException();
+                }
+
+                String fromStr = input.substring(fromStart, toSep).trim();
+                String toStr   = input.substring(toSep + 5, endParen).trim();
+
+                LocalDateTime from = parseStoredDateTime(fromStr);
+                LocalDateTime to   = parseStoredDateTime(toStr);
+
+                newTask = new Event(description, from, to);
+                break;
+            default:
+                throw new DataIntegrityException();
             }
             if (input.charAt(4) == 'X') {
                 newTask.MarkDone();
