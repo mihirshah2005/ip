@@ -1,3 +1,8 @@
+package shahzam.utils;
+import shahzam.exception.ShahzamExceptions;
+import shahzam.exception.UnknownCommandException;
+import shahzam.task.TaskList;
+
 public class Parser {
 
     public static CheckedFunction interpretCommand(String input) throws ShahzamExceptions {
@@ -21,7 +26,7 @@ public class Parser {
     }
 
 
-    interface CheckedFunction {
+    public interface CheckedFunction {
         String execute(TaskList newlist) throws ShahzamExceptions;
     }
 }

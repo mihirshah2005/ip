@@ -1,3 +1,5 @@
+package shahzam.utils;
+
 import java.util.Scanner;
 
 public class Ui {

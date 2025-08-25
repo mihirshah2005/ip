@@ -1,3 +1,4 @@
 [T][X] read book
 [E][X] test (from: Mar 02 2021 1230 to: Mar 03 2021 1230)
 [D][ ] eat food (by: Mar 02 2022 1259)
+[T][ ] eat food

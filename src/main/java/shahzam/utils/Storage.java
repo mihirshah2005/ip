@@ -1,3 +1,12 @@
+package shahzam.utils;
+
+import shahzam.exception.DataIntegrityException;
+import shahzam.exception.ShahzamExceptions;
+import shahzam.task.Deadline;
+import shahzam.task.Event;
+import shahzam.task.Task;
+import shahzam.task.ToDo;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,7 +22,7 @@ public class Storage {
     private final String fileName;
 
     /**
-     * Constructor for Storage.
+     * Constructor for shahzam.utils.Storage.
      *
      * @param fileName file path to local storage
      */

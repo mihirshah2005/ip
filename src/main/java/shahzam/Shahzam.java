@@ -1,3 +1,10 @@
+package shahzam;
+import shahzam.exception.ShahzamExceptions;
+import shahzam.task.TaskList;
+import shahzam.utils.Parser;
+import shahzam.utils.Storage;
+import shahzam.utils.Ui;
+
 import java.io.IOException;
 
 

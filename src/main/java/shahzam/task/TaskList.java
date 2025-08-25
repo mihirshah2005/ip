@@ -1,3 +1,12 @@
+package shahzam.task;
+
+import shahzam.exception.InvalidDeadlineFormatException;
+import shahzam.exception.InvalidEventFormatException;
+import shahzam.exception.InvalidTaskNumberException;
+import shahzam.exception.IllegalFormatException;
+import shahzam.exception.ShahzamExceptions;
+import shahzam.utils.DateTimeFormatUtils;
+
 import java.util.ArrayList;
 import java.time.LocalDateTime;
 
@@ -84,7 +93,7 @@ public class TaskList {
             Task t = new Deadline(description, by);
             return AddTask(t, true);
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidDeadlineFormatException("Deadline format is incorrect. Use '/by' to specify deadline.");
+            throw new InvalidDeadlineFormatException("shahzam.task.Deadline format is incorrect. Use '/by' to specify deadline.");
         } catch (Exception e) {
             throw new InvalidDeadlineFormatException(
                     "Use '/by yyyy-MM-dd HHmm' or '/by d/M/yyyy HHmm' (e.g., 2019-12-02 1800 or 2/12/2019 1800)."
@@ -94,7 +103,7 @@ public class TaskList {
 
     }
 
-    public String addEvent(String input) throws InvalidEventFormatException{
+    public String addEvent(String input) throws InvalidEventFormatException {
         try {
             String[] parts = input.substring(6).split("/from", 2);
             if (parts.length < 2) throw new InvalidEventFormatException("Please specify '/from'.");
@@ -113,7 +122,7 @@ public class TaskList {
                     "Use '/from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm' or '/from d/M/yyyy HHmm /to d/M/yyyy HHmm'."
             );
         } catch (IndexOutOfBoundsException e) {
-            throw new InvalidEventFormatException("Event format is incorrect. Use '/from' and '/to'.");
+            throw new InvalidEventFormatException("shahzam.task.Event format is incorrect. Use '/from' and '/to'.");
         }
 
     }
