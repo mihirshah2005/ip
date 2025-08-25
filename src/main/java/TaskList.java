@@ -9,8 +9,7 @@ import java.time.format.DateTimeParseException;
 
 public class TaskList {
 
-    private final String WELCOME_MSG = "\nThe word was spoken, SHAHZAM awakens.\n" + "What can I do for you today?";
-    private final String EXIT_MSG = "Thunder quiets. SHAHZAM signing off, until next time.";
+
 
     private ArrayList<Task> TaskList = new ArrayList<>();
 
