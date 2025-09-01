@@ -1,5 +1,7 @@
 [T][ ] read book
 [T][X] buy food
-[T][ ] sell book
-[T][ ] make foo
+[T][X] sell book
 [T][ ] read book
+[T][ ] eat food
+[T][ ] finish assignment
+[D][ ] finish 2103t (by: Sep 02 2025, 6:00 PM)
