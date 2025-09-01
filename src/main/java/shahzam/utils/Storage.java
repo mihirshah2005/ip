@@ -1,12 +1,5 @@
 package shahzam.utils;
 
-import shahzam.exception.DataIntegrityException;
-import shahzam.exception.ShahzamExceptions;
-import shahzam.task.Deadline;
-import shahzam.task.Event;
-import shahzam.task.Task;
-import shahzam.task.ToDo;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -16,6 +9,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import shahzam.exception.DataIntegrityException;
+import shahzam.exception.ShahzamExceptions;
+import shahzam.task.Deadline;
+import shahzam.task.Event;
+import shahzam.task.Task;
+import shahzam.task.ToDo;
+
+
 
 public class Storage {
 
@@ -35,7 +37,7 @@ public class Storage {
      *
      * @param tasks the list of tasks to be saved into local storage
      * @throws IOException if the named file exists but is a directory rather than a regular file,
-     * does not exist but cannot be created, or cannot be opened for any other reason
+     *     does not exist but cannot be created, or cannot be opened for any other reason
      */
     public void save(List<Task> tasks) throws IOException {
         StringBuilder output = new StringBuilder();
@@ -53,7 +55,7 @@ public class Storage {
      * @return an array list of tasks containing any tasks that can be read from local storage
      * @throws DataIntegrityException if the save file is not in the correct format
      * @throws IOException if the named file exists but is a directory rather than a regular file,
-     * does not exist but cannot be created, or cannot be opened for any other reason
+     *     does not exist but cannot be created, or cannot be opened for any other reason
      */
     public ArrayList<Task> load() throws DataIntegrityException, IOException {
         File file = new File(fileName);
@@ -84,17 +86,17 @@ public class Storage {
                 description = input.substring(7, input.indexOf(" ("));
 
                 int fromStart = input.indexOf("(from: ") + 7;
-                int toSep     = input.indexOf(" to: ", fromStart);
-                int endParen  = input.lastIndexOf(')');
+                int toSep = input.indexOf(" to: ", fromStart);
+                int endParen = input.lastIndexOf(')');
                 if (fromStart < 7 || toSep == -1 || endParen == -1) {
                     throw new DataIntegrityException();
                 }
 
                 String fromStr = input.substring(fromStart, toSep).trim();
-                String toStr   = input.substring(toSep + 5, endParen).trim();
+                String toStr = input.substring(toSep + 5, endParen).trim();
 
                 LocalDateTime from = parseStoredDateTime(fromStr);
-                LocalDateTime to   = parseStoredDateTime(toStr);
+                LocalDateTime to = parseStoredDateTime(toStr);
 
                 newTask = new Event(description, from, to);
                 break;
@@ -117,8 +119,8 @@ public class Storage {
             return DateTimeFormatUtils.getLocalDateTimeFromString(s);
         } catch (ShahzamExceptions ignored) {
             try {
-                DateTimeFormatter OUT = DateTimeFormatter.ofPattern("MMM dd yyyy HHmm");
-                return LocalDateTime.parse(s, OUT);
+                DateTimeFormatter Out = DateTimeFormatter.ofPattern("MMM dd yyyy HHmm");
+                return LocalDateTime.parse(s, Out);
             } catch (Exception e) {
                 throw new DataIntegrityException();
             }

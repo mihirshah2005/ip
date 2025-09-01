@@ -1,4 +1,5 @@
 [T][ ] read book
-[T][ ] buy food
+[T][X] buy food
 [T][ ] sell book
 [T][ ] make foo
+[T][ ] read book

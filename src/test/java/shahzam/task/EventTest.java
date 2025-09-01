@@ -1,9 +1,11 @@
 package shahzam.task;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
 import org.junit.jupiter.api.Test;
 
 class EventTest {
@@ -16,11 +18,11 @@ class EventTest {
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM d yyyy");
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mm a");
 
-        Event event = new Event("test event",startTime, endTime);
+        Event event = new Event("test event", startTime, endTime);
 
-        String expected = "[E][ ] test event (from: " + date.format(dateFormatter) + ", " +
-                startTime.format(timeFormatter) + " to: " + date.format(dateFormatter) + ", " +
-                endTime.format(timeFormatter) + ")";
+        String expected = "[E][ ] test event (from: " + date.format(dateFormatter) + ", "
+                + startTime.format(timeFormatter) + " to: " + date.format(dateFormatter) + ", "
+                + endTime.format(timeFormatter) + ")";
         assertEquals(expected, event.toString());
     }
 }
