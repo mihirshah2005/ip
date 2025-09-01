@@ -51,10 +51,24 @@ public class Shahzam {
         new Shahzam("data.txt").run();
     }
 
-    /**
-     * Generates a response for the user's chat message.
-     */
-    public String getResponse(String input) {
-        return "Duke heard: " + input;
+
+    public String getResponse(String command) {
+        // Exit is handled separately
+        if (command.equals("bye")) {
+            return "Thunder quiets. SHAHZAM signing off, until next time.";
+        }
+
+        String message;
+        try {
+            // Interpret and execute the command by user
+            message = Parser.interpretCommand(command).execute(taskList);
+
+            // Update storage file
+            storage.save(taskList.getTasks());
+        } catch (ShahzamExceptions | IOException e) {
+            message = e.getMessage();
+        }
+
+        return message;
     }
 }
