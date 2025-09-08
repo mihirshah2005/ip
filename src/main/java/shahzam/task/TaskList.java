@@ -98,7 +98,7 @@ public class TaskList {
                 throw new InvalidTaskNumberException("There is no task with that number.");
             }
             Task t = TaskList.get(idx - 1);
-            t.UnmarkDone();
+            t.Unmark();
             return "OK, I've marked this task as not done yet:\n  " + t;
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             throw new InvalidTaskNumberException("Please provide a valid task number.");

@@ -23,23 +23,27 @@ public class Task {
      * Marks the task as done.
      */
     public void MarkDone() {
+
         this.isDone = true;
     }
 
     /**
-     * Returns true if the task is marked as done.
+     * Checks if the description contains the specified keyword.
      *
-     * @return True if the task is done, false otherwise.
+     * @param keyword The keyword to search for in the description.
+     * @return true if the description contains the keyword, false otherwise.
      */
-    public boolean isDone() {
-        return this.isDone;
-    }
-
     public boolean matchDescription(String keyword) {
+
         return description.contains(keyword);
     }
 
-    public void UnmarkDone() {
+    /**
+     * Marks the current item as not done.
+     * This method sets the {@code isDone} flag to false, indicating that the item is not completed.
+     */
+    public void Unmark() {
+
         this.isDone = false;
     }
 
@@ -49,7 +53,7 @@ public class Task {
      * @return The status icon of the task.
      */
     public String getStatusIcon() {
-        return (isDone ? "X" : " "); // mark done task with X
+        return (isDone ? "X" : " ");
     }
 
     @Override
