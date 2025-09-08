@@ -21,6 +21,7 @@ public class TaskList {
     private ArrayList<Task> TaskList = new ArrayList<>();
 
     public TaskList() {
+
         this(new ArrayList<>());
     }
 
@@ -30,6 +31,7 @@ public class TaskList {
      * @param TaskList The list of tasks to initialize the TaskList with.
      */
     public TaskList(ArrayList<Task> TaskList) {
+
         this.TaskList = TaskList;
     }
 
@@ -39,6 +41,7 @@ public class TaskList {
      * @return The list of tasks.
      */
     public ArrayList<Task> getTasks() {
+
         return TaskList;
     }
 
@@ -98,7 +101,7 @@ public class TaskList {
                 throw new InvalidTaskNumberException("There is no task with that number.");
             }
             Task t = TaskList.get(idx - 1);
-            t.UnmarkDone();
+            t.Unmark();
             return "OK, I've marked this task as not done yet:\n  " + t;
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
             throw new InvalidTaskNumberException("Please provide a valid task number.");
@@ -206,6 +209,16 @@ public class TaskList {
             throw new InvalidTaskNumberException("Please provide a valid task number.");
         }
     }
+
+    /**
+     * Returns a formatted string of all tasks in the list.
+     *
+     * Iterates through the TaskList and constructs a string representation of each task,
+     * with each task numbered and listed on a new line. The string returned includes
+     * all tasks present in the list.
+     *
+     * @return A string representing all tasks in the list, formatted with task numbers.
+     */
     public String PrintList() {
         int size = TaskList.size();
 
@@ -224,17 +237,27 @@ public class TaskList {
         return "Here are the tasks in your list: \n" + sb;
     }
 
+    /**
+     * Searches for tasks in the list that match a specified keyword and returns a
+     * formatted list of those tasks.
+     *
+     * This method validates the command format, extracts the keyword, and filters
+     * tasks that contain the keyword in their descriptions. The filtered tasks are
+     * then formatted into a string for output.
+     *
+     * @param command The command string, expected to be in the form of "find [keyword]".
+     * @return A string representing the filtered tasks that match the given keyword.
+     * @throws IllegalFormatException If the command format is incorrect or invalid.
+     */
     public String findInList(String command) throws IllegalFormatException {
         validateCommand(command, "^find .*", "find [keyword]");
 
         String keyword = command.substring(5).trim();
 
-        // Filter tasks that match the description keyword (case-insensitive)
         List<Task> filteredTasks = TaskList.stream()
-                .filter(task -> task.matchDescription(keyword))  // Make sure matchDescription exists
+                .filter(task -> task.matchDescription(keyword))
                 .collect(Collectors.toList());
 
-        // Return formatted list
         return formatPrintList(filteredTasks);
     }
 

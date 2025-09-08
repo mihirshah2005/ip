@@ -21,7 +21,7 @@ import shahzam.task.ToDo;
 
 public class Storage {
 
-    private final String fileName;
+    private final String FILE_NAME;
 
     /**
      * Constructor for shahzam.utils.Storage.
@@ -29,7 +29,7 @@ public class Storage {
      * @param fileName file path to local storage
      */
     public Storage(String fileName) {
-        this.fileName = fileName;
+        this.FILE_NAME = fileName;
     }
 
     /**
@@ -45,7 +45,7 @@ public class Storage {
         StringBuilder output = new StringBuilder();
         tasks.forEach(task -> output.append(task.toString()).append("\n"));
 
-        FileWriter fw = new FileWriter(fileName, false);
+        FileWriter fw = new FileWriter(FILE_NAME, false);
         fw.write(output.toString());
         fw.flush();
         fw.close();
@@ -60,14 +60,14 @@ public class Storage {
      *     does not exist but cannot be created, or cannot be opened for any other reason
      */
     public ArrayList<Task> load() throws DataIntegrityException, IOException {
-        File file = new File(fileName);
+        File file = new File(FILE_NAME);
         ArrayList<Task> TaskList = new ArrayList<>();
 
         if (file.createNewFile()) {
             return TaskList;
         }
         String input;
-        BufferedReader br = new BufferedReader(new FileReader(fileName));
+        BufferedReader br = new BufferedReader(new FileReader(FILE_NAME));
 
         while ((input = br.readLine()) != null) {
             Task newTask;
