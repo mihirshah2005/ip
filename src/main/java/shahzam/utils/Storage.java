@@ -40,6 +40,8 @@ public class Storage {
      *     does not exist but cannot be created, or cannot be opened for any other reason
      */
     public void save(List<Task> tasks) throws IOException {
+        assert tasks != null : "Tasks is not initialized";
+
         StringBuilder output = new StringBuilder();
         tasks.forEach(task -> output.append(task.toString()).append("\n"));
 
