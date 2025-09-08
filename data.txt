@@ -1,2 +1,3 @@
-[T][X] finish assignment
+[T][ ] finish assignment
 [T][ ] eat food
+[T][X] read book

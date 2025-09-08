@@ -7,17 +7,29 @@ import shahzam.utils.Ui;
 
 import java.io.IOException;
 
-
+/**
+ * Main class representing the SHAHZAM application.
+ * This class handles the application lifecycle, including loading tasks, interpreting user commands,
+ * and saving tasks to a file. It interacts with the user through the UI and manages tasks through
+ * the TaskList, Storage, and Parser utilities.
+ */
 public class Shahzam {
 
-    private final String fileName = "data.txt";
+    private final String FILE_NAME = "data.txt";
     private TaskList taskList;
     private final Storage storage;
     private final Ui ui;
 
-    public Shahzam(String fileName) {
+    /**
+     * Constructs a Shahzam application with the specified file name for data storage.
+     * Initializes the UI, Storage, and TaskList objects. Attempts to load tasks from the specified
+     * file, and creates a new task list if an error occurs during loading.
+     *
+     * @param FILE_NAME The name of the file where task data is stored.
+     */
+    public Shahzam(String FILE_NAME) {
         ui = new Ui();
-        storage = new Storage(fileName);
+        storage = new Storage(FILE_NAME);
 
         try {
             taskList = new TaskList(storage.load());
@@ -30,6 +42,11 @@ public class Shahzam {
     }
 
 
+    /**
+     * Runs the SHAHZAM application, continuously accepting user commands until the user exits.
+     * Interprets each command and performs the corresponding action on the TaskList. Saves the task list
+     * to the file after each modification. The program terminates when the user types "bye".
+     */
     public void run() {
         String input;
 
@@ -52,18 +69,24 @@ public class Shahzam {
     }
 
 
+    /**
+     * Processes a user command and returns a corresponding response message.
+     * This method interprets the command, executes the appropriate action on the task list,
+     * and returns a message to the user. If the command is invalid or an error occurs, an error message is returned.
+     *
+     * @param command The user input command.
+     * @return The response message based on the command execution result.
+     */
     public String getResponse(String command) {
-        // Exit is handled separately
         if (command.equals("bye")) {
             return "Thunder quiets. SHAHZAM signing off, until next time.";
         }
 
         String message;
         try {
-            // Interpret and execute the command by user
+
             message = Parser.interpretCommand(command).execute(taskList);
 
-            // Update storage file
             storage.save(taskList.getTasks());
         } catch (ShahzamExceptions | IOException e) {
             message = e.getMessage();
