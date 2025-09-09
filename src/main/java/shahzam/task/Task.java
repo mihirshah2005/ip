@@ -56,6 +56,17 @@ public class Task {
         return (isDone ? "X" : " ");
     }
 
+    /**
+     * Checks if the task's description contains the given keyword, ignoring case.
+     *
+     * @param keyword The keyword to search for in the description. It will be matched in a case-insensitive manner.
+     * @return true if the task's description contains the keyword, false otherwise.
+     */
+    public boolean matchDescriptionIgnoreCase(String keyword) {
+        return description != null && description.toLowerCase().contains(keyword.toLowerCase());
+    }
+
+
     @Override
     public String toString() {
         return "[" + this.getStatusIcon() + "] " + description;
