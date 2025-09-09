@@ -27,11 +27,16 @@ public class MainWindow extends AnchorPane {
 
     @FXML
     public void initialize() {
+
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+        dialogContainer.getChildren().add(
+                DialogBox.getShahzamDialog("The word was spoken, SHAHZAM awakens.\n What can I do for you today?", ShahzamImage)
+        );
     }
 
     /** Injects the Shahzam instance */
     public void setShahzam(Shahzam s) {
+
         shahzam = s;
     }
 
