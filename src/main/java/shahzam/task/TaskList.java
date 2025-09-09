@@ -250,16 +250,25 @@ public class TaskList {
      * @throws IllegalFormatException If the command format is incorrect or invalid.
      */
     public String findInList(String command) throws IllegalFormatException {
-        validateCommand(command, "^find .*", "find [keyword]");
 
+        validateCommand(command, "^find .*", "find [keyword]");
         String keyword = command.substring(5).trim();
 
+        if (keyword.isEmpty()) {
+            throw new IllegalFormatException("Search keyword cannot be empty.");
+        }
+
         List<Task> filteredTasks = TaskList.stream()
-                .filter(task -> task.matchDescription(keyword))
+                .filter(task -> task.matchDescriptionIgnoreCase(keyword))
                 .collect(Collectors.toList());
+
+        if (filteredTasks.isEmpty()) {
+            return "No tasks found matching the keyword: " + keyword;
+        }
 
         return formatPrintList(filteredTasks);
     }
+
 
     private String formatPrintList(List<Task> tasks) {
         StringBuilder sb = new StringBuilder();
