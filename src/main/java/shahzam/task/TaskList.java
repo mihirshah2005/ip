@@ -140,7 +140,7 @@ public class TaskList {
             }
 
             String description = parts[0].trim();
-            String byRaw       = parts[1].trim();
+            String byRaw = parts[1].trim();
 
             LocalDateTime by = DateTimeFormatUtils.getLocalDateTimeFromString(byRaw);
 
@@ -168,11 +168,15 @@ public class TaskList {
     public String addEvent(String input) throws InvalidEventFormatException {
         try {
             String[] parts = input.substring(6).split("/from", 2);
-            if (parts.length < 2) throw new InvalidEventFormatException("Please specify '/from'.");
+            if (parts.length < 2) {
+                throw new InvalidEventFormatException("Please specify '/from'.");
+            }
             String description = parts[0].trim();
 
             String[] timeParts = parts[1].split("/to", 2);
-            if (timeParts.length < 2) throw new InvalidEventFormatException("Please specify '/to'.");
+            if (timeParts.length < 2) {
+                throw new InvalidEventFormatException("Please specify '/to'.");
+            }
 
             LocalDateTime from = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[0].trim());
             LocalDateTime to   = DateTimeFormatUtils.getLocalDateTimeFromString(timeParts[1].trim());
@@ -198,11 +202,11 @@ public class TaskList {
      */
     public String deleteTask(String input) throws InvalidTaskNumberException {
         try {
-            int idx = Integer.parseInt(input.substring(7).trim()); // 1-based index
+            int idx = Integer.parseInt(input.substring(7).trim());
             if (idx < 1 || idx > TaskList.size()) {
                 throw new InvalidTaskNumberException("There is no task with that number.");
             }
-            Task t = TaskList.remove(idx - 1); // Remove task at the index
+            Task t = TaskList.remove(idx - 1);
             return "Noted. I've removed this task:\n  " + t + "\n"
                     + "Now you have " + TaskList.size() + " tasks in your list.";
         } catch (NumberFormatException | IndexOutOfBoundsException e) {
