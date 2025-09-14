@@ -18,7 +18,7 @@ import shahzam.task.Task;
 import shahzam.task.ToDo;
 
 
-
+//@@author SkyBlaise99-reused
 public class Storage {
 
     private final String FILE_NAME;
@@ -29,6 +29,7 @@ public class Storage {
      * @param fileName file path to local storage
      */
     public Storage(String fileName) {
+
         this.FILE_NAME = fileName;
     }
 
@@ -72,10 +73,9 @@ public class Storage {
         while ((input = br.readLine()) != null) {
             Task newTask;
             String description;
-            String time;
 
             switch (input.charAt(1)) {
-            case 'T': // todo
+            case 'T':
                 newTask = new ToDo(input.substring(7));
                 break;
             case 'D':
