@@ -117,15 +117,27 @@ public class Storage {
     }
 
     private LocalDateTime parseStoredDateTime(String s) throws DataIntegrityException {
+        s = s.trim();
+        DateTimeFormatter[] formats = new DateTimeFormatter[] {
+                java.time.format.DateTimeFormatter.ofPattern("MMM d yyyy, h:mm a", java.util.Locale.ENGLISH),
+                java.time.format.DateTimeFormatter.ofPattern("MMM dd yyyy, h:mm a", java.util.Locale.ENGLISH),
+                java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"),
+                java.time.format.DateTimeFormatter.ISO_LOCAL_DATE_TIME,
+                java.time.format.DateTimeFormatter.ofPattern("MMM dd yyyy HHmm", java.util.Locale.ENGLISH) // your old fallback
+        };
+
+        for (DateTimeFormatter fmt : formats) {
+            try {
+                return LocalDateTime.parse(s, fmt);
+            } catch (Exception ignore) {
+                // try next
+            }
+        }
+
         try {
             return DateTimeFormatUtils.getLocalDateTimeFromString(s);
-        } catch (ShahzamExceptions ignored) {
-            try {
-                DateTimeFormatter Out = DateTimeFormatter.ofPattern("MMM dd yyyy HHmm");
-                return LocalDateTime.parse(s, Out);
-            } catch (Exception e) {
-                throw new DataIntegrityException();
-            }
+        } catch (ShahzamExceptions e) {
+            throw new DataIntegrityException();
         }
     }
 }
