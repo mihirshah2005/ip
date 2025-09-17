@@ -29,14 +29,25 @@ public class MainWindow extends AnchorPane {
     private final BooleanProperty busy = new SimpleBooleanProperty(false);
     private static final String EXIT_LINE = "Thunder quiets. SHAHZAM signing off, until next time.";
 
+    // field
+    private final BooleanProperty closed = new SimpleBooleanProperty(false);
+
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
         scrollPane.setFitToWidth(true);
         dialogContainer.setFillWidth(true);
 
-        userInput.setPromptText("Type a spell…  (Shift+Enter for newline)");
-        sendButton.disableProperty().bind(busy.or(userInput.textProperty().isEmpty()));
+        userInput.setPromptText("Type a spell… ");
+
+        // Drive both controls via bindings
+        sendButton.disableProperty().bind(
+                busy.or(userInput.textProperty().isEmpty()).or(closed)
+        );
+        userInput.disableProperty().bind(
+                busy.or(closed)
+        );
+
         userInput.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER && !e.isShiftDown()) {
                 e.consume();
@@ -45,7 +56,6 @@ public class MainWindow extends AnchorPane {
         });
 
         dialogContainer.getStyleClass().add("chat-root");
-
         dialogContainer.getChildren().add(
                 DialogBox.getShahzamDialog(
                         "The word was spoken, SHAHZAM awakens.\nWhat can I do for you today?",
@@ -53,6 +63,7 @@ public class MainWindow extends AnchorPane {
                 )
         );
     }
+
 
     /** Injects the Shahzam instance */
     public void setShahzam(Shahzam s) {
@@ -68,7 +79,6 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
 
         busy.set(true);
-        userInput.setDisable(true);
 
         Task<String> respondTask = new Task<>() {
             @Override protected String call() {
@@ -81,14 +91,11 @@ public class MainWindow extends AnchorPane {
             dialogContainer.getChildren().add(DialogBox.getShahzamDialog(response, shahzamImage));
 
             if (EXIT_LINE.equals(response)) {
-                userInput.setDisable(true);
-                sendButton.setDisable(true);
+                closed.set(true);          // permanently disables via binding
             } else {
-                userInput.setDisable(false);
                 userInput.requestFocus();
             }
             busy.set(false);
-
         });
 
         respondTask.setOnFailed(evt -> {
@@ -96,7 +103,6 @@ public class MainWindow extends AnchorPane {
                     DialogBox.getShahzamDialog("⚠️ Oops, something went wrong—try again.", shahzamImage)
             );
             busy.set(false);
-            userInput.setDisable(false);
         });
 
         Thread t = new Thread(respondTask);

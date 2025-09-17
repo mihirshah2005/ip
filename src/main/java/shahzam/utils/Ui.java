@@ -21,7 +21,6 @@ public class Ui {
      */
     public Ui() {
         sc = new Scanner(System.in);
-        System.out.println(WELCOME_MSG);
     }
 
     /**
