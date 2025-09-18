@@ -46,7 +46,7 @@ test {
 }
 
 application {
-    mainClass.set("shahzam.Main")
+    mainClass.set("shahzam.Launcher")
 }
 
 shadowJar {
@@ -63,6 +63,5 @@ checkstyle {
 }
 
 javafx {
-    version = "11"
     modules = ['javafx.controls', 'javafx.fxml']
 }

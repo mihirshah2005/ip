@@ -18,7 +18,7 @@ A tiny JavaFX assistant that helps you track todos, deadlines, and events — wi
       ```bash
       java -jar shahzam.jar
       ```
-4. **Try a command** in the input box (e.g. `list`) and hit **Enter**.
+4. **Try a command** in the input box (e.g. `todo eat food`) and hit **Enter**.
 
 > Tip: **Enter** sends the message.
 
@@ -49,17 +49,17 @@ A tiny JavaFX assistant that helps you track todos, deadlines, and events — wi
 
 ## 📜 Commands Overview
 
-| Command | What it does | Syntax |
-|---|---|---|
-| `todo` | Adds a To-Do task | `todo <description>` |
+| Command    | What it does | Syntax |
+|------------|---|---|
+| `todo`     | Adds a To-Do task | `todo <description>` |
 | `deadline` | Adds a Deadline task | `deadline <description> /by <yyyy-MM-dd HH:mm>` |
-| `event` | Adds an Event with start + end | `event <description> /from <yyyy-MM-dd HH:mm> /to <yyyy-MM-dd HH:mm>` |
-| `list` | Lists all tasks | `list` |
-| `done` | Marks a task as done | `done <index>` |
-| `unmark` | Marks a task as not done | `unmark <index>` |
-| `delete` | Deletes a task | `delete <index>` |
-| `find` | Finds tasks by description and/or flags | `find <query>`, `find -d`, `find -t <t|d|e>` |
-| `bye` | Saves data and exits | `bye` |
+| `event`    | Adds an Event with start + end | `event <description> /from <yyyy-MM-dd HH:mm> /to <yyyy-MM-dd HH:mm>` |
+| `list`     | Lists all tasks | `list` |
+| `mark`     | Marks a task as done | `done <index>` |
+| `unmark`   | Marks a task as not done | `unmark <index>` |
+| `delete`   | Deletes a task | `delete <index>` |
+| `find`     | Finds tasks by description and/or flags | `find <query>`, `find -d`, `find -t <t|d|e>` |
+| `bye`      | Saves data and exits | `bye` |
 
 > **Date/time format:** examples like `2025-01-02 18:30`. Shahzam will display times in a friendly format (e.g., `Jan 2 2025, 6:30 PM`).
 
@@ -210,7 +210,7 @@ Thunder quiets. SHAHZAM signing off, until next time.
 ## 🙏 Image Credits
 
 - User avatar: <a href="https://www.freepik.com/free-vector/cute-lightning-bolt-sticker-printable-weather-clipart-vector_18247304.htm#fromView=keyword&page=1&position=40&uuid=c2c5d840-4ce9-44bb-ba7d-95ae91612d27&query=Lightning+bolt+animation">Image by rawpixel.com on Freepik</a>
-- Shahzam avatar: <a href=https://www.pngarts.com/explore/130453 target="_blank">Shazam PNG Picture</a>
+- Shahzam avatar: <a href=https://www.pngarts.com/explore/130453>Shazam PNG Picture</a>
 
 ---
 

@@ -81,7 +81,9 @@ public class MainWindow extends AnchorPane {
         busy.set(true);
 
         Task<String> respondTask = new Task<>() {
-            @Override protected String call() {
+            @Override
+            protected String call() {
+
                 return shahzam.getResponse(input);
             }
         };
