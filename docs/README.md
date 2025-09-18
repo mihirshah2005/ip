@@ -6,7 +6,7 @@ A tiny JavaFX assistant that helps you track todos, deadlines, and events — wi
 
 ## 🔧 Quick start
 
-1. **Install Java 11+**  
+1. **Install Java 17**  
    Open a terminal and check:
    ```bash
    java --version
@@ -124,10 +124,10 @@ Here are your tasks!
 
 ---
 
-### `done` — mark as done
+### `mark` — mark as done
 **Input**
 ```
-done 1
+mark 1
 ```
 **Expected**
 ```
@@ -203,7 +203,7 @@ Thunder quiets. SHAHZAM signing off, until next time.
 
 - **Nothing happens when I press Enter**: Make sure the text field has focus (click it) and try again.
 - **Date parsing failed**: Use the `yyyy-MM-dd HH:mm` format, e.g., `2025-01-02 18:30`.
-- **App won’t start**: Verify `java --version` shows **11 or higher**.
+- **App won’t start**: Verify `java --version` shows **17**.
 
 ---
 
